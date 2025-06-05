@@ -1,0 +1,844 @@
+<!DOCTYPE html>   
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      display: grid;
+      grid-template-areas:
+        "header header"
+        "sidebar main"
+        "sidebar footer";
+      grid-template-columns: 240px 1fr;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      transition: grid-template-columns 0.3s ease;
+    }
+
+    body.sidebar-collapsed {
+      grid-template-columns: 72px 1fr;
+    }
+
+    header {
+      grid-area: header;
+      background: #fff;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      gap: 1rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #d94f4f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      width: 36px;
+      height: 36px;
+      user-select: none;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .logo span:first-child {
+      color: #000;
+    }
+
+    .logo span:last-child {
+      color: #f97316;
+    }
+
+    .search-wrapper {
+      flex-grow: 1;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      margin: 0 2rem;
+    }
+
+    .search-wrapper input {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px 0 0 6px;
+      width: 100%;
+    }
+
+    .search-btn {
+      background: #f97316;
+      color: white;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .material-icons {
+      font-size: 26px;
+      cursor: pointer;
+      color: #444;
+    }
+
+    aside.sidebar {
+      grid-area: sidebar;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 1rem;
+      border-right: 1px solid #eee;
+      width: 240px;
+      transition: width 0.3s;
+    }
+
+    body.sidebar-collapsed aside.sidebar {
+      width: 72px;
+      padding: 2rem 0.5rem;
+    }
+
+    .sidebar nav ul,
+    .sidebar-bottom ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav ul li,
+    .sidebar-bottom ul li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #444;
+      transition: background 0.2s;
+    }
+
+    .sidebar nav ul li:hover,
+    .sidebar-bottom ul li:hover {
+      background-color: #f0e8e3;
+    }
+
+    .sidebar nav ul li.active {
+      color: #f97316;
+    }
+
+    .sidebar nav ul li.active .material-icons {
+      color: #f97316;
+    }
+
+    .logout {
+      color: #dc2626;
+    }
+
+    .logout .material-icons {
+      color: #dc2626;
+    }
+
+    body.sidebar-collapsed .sidebar nav ul li span:not(.material-icons),
+    body.sidebar-collapsed .sidebar-bottom ul li span:not(.material-icons) {
+      display: none;
+    }
+
+    .submenu {
+  display: none;
+  padding-left: 2.5rem;
+  list-style: none;
+}
+
+.submenu li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.submenu li:hover {
+  background-color: #f0e8e3;
+}
+
+
+    main {
+      grid-area: main;
+      padding: 2rem;
+      background: #f3eaea;
+      overflow-y: auto;
+    }
+
+   
+
+.rounded-bg-div {
+  width: 100%;
+  height: 50%;
+  border-radius: 20px;
+  background-image: url('https://spicesinc.com/sites/default/files/y/whitebowls.jpg'); 
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: left;
+  text-align: left;
+  color: #f97316; 
+  font-size: 2.8rem;
+  font-family: 'Brush Script MT', cursive;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8); 
+}
+
+.highlight {
+  color: #f97316; /* Orange */
+}
+
+
+.top-recipes-section {
+  margin-top: 3rem;
+}
+
+.top-recipes-section h2 {
+  font-size: 1.8rem;
+  color: #d94f4f;
+  margin-bottom: 1rem;
+}
+
+.recipe-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.recipe-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding-bottom: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.recipe-card:hover {
+  transform: translateY(-4px);
+}
+
+.recipe-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.recipe-card h3 {
+  margin: 0.75rem 0 0.25rem;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.recipe-card p {
+  margin: 0 0 0.75rem;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.recipe-card button {
+  background-color: #f97316;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.recipe-card button:hover {
+  background-color: #ea6511;
+}
+
+.video-spotlight {
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  max-width: 1000px;
+}
+
+.video-spotlight h2 {
+  font-size: 1.8rem;
+  color: #d35400;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tips-tricks-section {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: #fff8f2;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.tips-tricks-section h2 {
+  font-size: 1.8rem;
+  color: #d35400;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.tips-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.tip-card {
+  background: #ffffff;
+  border-left: 5px solid #f97316;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease;
+}
+
+.tip-card:hover {
+  transform: translateY(-4px);
+}
+
+.tip-card h3 {
+  font-size: 1.1rem;
+  color: #d94f4f;
+  margin-bottom: 0.5rem;
+}
+
+.tip-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.tip-card a {
+  color: #f97316;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.featured-recipe {
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: #fff8f2;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.featured-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.featured-header .label {
+  background-color: #f97316;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.featured-header h2 {
+  font-size: 1.8rem;
+  color: #d94f4f;
+}
+
+.featured-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.featured-content img {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.featured-info {
+  max-width: 500px;
+}
+
+.featured-info h3 {
+  font-size: 1.5rem;
+  color: #d35400;
+  margin-bottom: 0.5rem;
+}
+
+.featured-info p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.featured-info em {
+  font-style: italic;
+  color: #888;
+}
+
+.featured-info button {
+  background-color: #f97316;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.featured-info button:hover {
+  background-color: #ea6511;
+}
+
+.testimonials-section {
+  background: #fff;
+  margin-top: 2rem;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.testimonials-section h2 {
+  font-size: 1.8rem;
+  color: #d94f4f;
+  margin-bottom: 1.5rem;
+}
+
+.testimonials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.testimonial {
+  background: #fff8f2;
+  padding: 1rem;
+  border-radius: 10px;
+  border-left: 5px solid #f97316;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.testimonial .quote {
+  font-style: italic;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+.testimonial .stars {
+  color: #f97316;
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.testimonial .user {
+  font-weight: 600;
+  color: #555;
+}
+
+.popup-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    width: 320px;
+    max-width: 90vw;
+    padding: 1rem 1.5rem 2rem;
+    z-index: 1000;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 1.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #d94f4f;
+  }
+
+  .popup-content img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .popup-content h2 {
+    margin-bottom: 0.5rem;
+    color: #d94f4f;
+  }
+
+  .popup-content p {
+    color: #555;
+    font-size: 0.95rem;
+  }
+
+  .popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5); /* dim background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999; /* below popup-card but above everything else */
+}
+
+.popup-overlay.hidden {
+  display: none;
+}
+
+    footer {
+      grid-area: footer;
+      background: #f4f4f4;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<script>
+  function openPopup() {
+    document.getElementById('popupOverlay').classList.remove('hidden');
+  }
+
+  function closePopup() {
+    document.getElementById('popupOverlay').classList.add('hidden');
+  }
+</script>
+
+<body>
+ 
+  <header>
+    <div class="header-left">
+      <button class="menu-btn" aria-label="Toggle sidebar menu">
+        <span class="material-icons">menu</span>
+      </button>
+      <div class="logo"><span>Swaad</span><span>Rachnay</span></div>
+    </div>
+
+    <div class="search-wrapper">
+      <input type="text" placeholder="Search recipe here..." />
+      <button class="search-btn" aria-label="Search">
+        <span class="material-icons">search</span>
+      </button>
+    </div>
+
+    <div class="header-icons">
+      <span class="material-icons" title="Notifications">notifications</span>
+      <span class="material-icons" title="Profile">account_circle</span>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <nav>
+        <ul>
+          <li class="active" onclick="navigateTo('home')"><span class="material-icons">home</span><span>Home</span></li>
+          <li  onclick="navigateTo('categories')"><span class="material-icons">apps</span><span>Categories</span></li>
+          <li  onclick="navigateTo('about')"><span class="material-icons">search</span><span>About</span></li>
+          <li onclick="navigateTo('contact')"><span class="material-icons">mail</span><span>Contact</span></li>
+          <li  id="createMenu" class="has-submenu"><span class="material-icons">add</span><span>Create</span></li>
+<ul class="submenu" id="createSubmenu">
+  <li onclick="navigateTo('recipe')"><span class="material-icons">restaurant_menu</span><span>New Recipe</span></li>
+  <li onclick="navigateTo('todo')"><span class="material-icons">check_circle</span><span>To-Do List</span></li>
+</ul>
+        </ul>
+      </nav>
+    </div>
+    <div class="sidebar-bottom">
+      <ul>
+        <li onclick="navigateTo('categories')"><span class="material-icons">settings</span><span>Settings</span></li>
+        <li onclick="navigateTo('index')" class="logout"><span class="material-icons">logout</span><span>Log Out</span></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <div class="rounded-bg-div">
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;A Canvas of Spices, 
+      <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A Story of Flavors
+    </div>
+
+    <section class="top-recipes-section">
+  <h2>Top Indian Recipes of This Week</h2>
+  <div class="recipe-cards">
+    <div class="recipe-card">
+      <img src="https://assets.limetray.com/assets/user_images/menus/compressed/1606130153_HyderabadiChickenBiryani.JPG" alt="Chicken Biryani">
+      <h3>Chicken Biryani</h3>
+      <p>⏱ 60 mins</p>
+      <button onclick="openPopup()">View Recipe</button>
+    </div>
+    <div class="recipe-card">
+      <img src="https://vegecravings.com/wp-content/uploads/2017/04/paneer-butter-masala-recipe-step-by-step-instructions-500x500.jpg" alt="Paneer Butter Masala">
+      <h3>Paneer Butter Masala</h3>
+      <p>⏱ 40 mins</p>
+      <button onclick="openPopup()">View Recipe</button>
+    </div>
+    <div class="recipe-card">
+      <img src="https://culinarydelightsandbeyond.com/wp-content/uploads/2023/03/dosa-5oF7d_hPJG4-scaled.jpg" alt="Masala Dosa">
+      <h3>Masala Dosa</h3>
+      <p>⏱ 35 mins</p>
+      <button onclick="openPopup()">View Recipe</button>
+    </div>
+    <div class="recipe-card">
+      <img src="https://www.foodie-trail.com/wp-content/uploads/2020/04/PHOTO-2022-02-12-20-04-41_1.jpg" alt="Gulab Jamun">
+      <h3>Gulab Jamun</h3>
+      <p>⏱ 25 mins</p>
+      <button onclick="openPopup()">View Recipe</button>
+    </div>
+  </div>
+</section>
+
+<section class="tips-tricks-section">
+  <h2>🧂 Cooking Tips & Tricks</h2>
+  <div class="tips-list">
+    <div class="tip-card">
+      <h3>🥘 How to Keep Biryani Rice Fluffy</h3>
+      <p>Rinse rice 3–4 times, soak for 30 mins, and avoid over-stirring while cooking.</p>
+
+    </div>
+    <div class="tip-card">
+      <h3>🌿 3 Ways to Store Spices Longer</h3>
+      <p>Keep them in airtight jars, away from light, and don’t store above the stove.</p>
+
+    </div>
+    <div class="tip-card">
+      <h3>🔪 Quick Onion Cutting Without Tears</h3>
+      <p>Chill onions before chopping, and cut near a running fan or open window.</p>
+ 
+    </div>
+  </div>
+</section>
+
+
+
+<section class="video-spotlight">
+  <h2>🎥 Video Spotlight</h2>
+  <div class="video-container">
+    <iframe 
+      src="vid.mp4" 
+      title="Recipe Video" 
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
+
+<section class="featured-recipe">
+  <div class="featured-header">
+    <h2>Featured Recipe of the Day</h2>
+  </div>
+  <div class="featured-content">
+    <img src="https://www.vice.com/wp-content/uploads/sites/2/2023/03/1664574799135-dal-tadka-recipe1.jpeg" alt="Dal Tadka">
+    <div class="featured-info">
+      <h3>Dal Tadka</h3>
+      <p>This comforting Indian lentil dish is known for its rich tempering of garlic, ghee, and red chilies. Perfect with rice or naan!</p>
+      <p><em>Tip:</em> Add a pinch of smoked paprika for an irresistible aroma.</p>
+      <button>View Full Recipe</button>
+    </div>
+  </div>
+</section>
+
+<!-- User Testimonials Section -->
+<section class="testimonials-section">
+  <h2>What Our Users Say</h2>
+  <div class="testimonials">
+    <div class="testimonial">
+      <p class="quote">"This site has completely changed how I cook! The recipes are easy and delicious."</p>
+      <div class="stars">★★★★★</div>
+      <p class="user">– Sarah M.</p>
+    </div>
+    <div class="testimonial">
+      <p class="quote">"Love the meal planner! It helps me organize my week and saves time."</p>
+      <div class="stars">★★★★☆</div>
+      <p class="user">– Jason R.</p>
+    </div>
+    <div class="testimonial">
+      <p class="quote">"The tips and tricks section is a game-changer. So many helpful ideas!"</p>
+      <div class="stars">★★★★★</div>
+      <p class="user">– Priya K.</p>
+    </div>
+  </div>
+</section>
+
+ <div id="recipePopup" class="popup-card" style="display:none;">
+  <button id="closePopup" class="close-btn" aria-label="Close popup">&times;</button>
+  <div class="popup-content">
+    <h2 id="popupTitle">Recipe Title</h2>
+    <img id="popupImage" src="" alt="Recipe Image" />
+    <p id="popupTime">⏱ Preparation time</p>
+    <p id="popupDescription">Here will be recipe details or description.</p>
+  </div>
+</div>
+
+
+  </main>
+
+  <footer>
+    &copy; 2025 SwaadRachnay | Made with ❤️ by You
+  </footer>
+
+  <script>
+    const menuBtn = document.querySelector('.menu-btn');
+    menuBtn.addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-collapsed');
+    });
+
+   const createMenu = document.getElementById('createMenu');
+  const createSubmenu = document.getElementById('createSubmenu');
+
+  createMenu.addEventListener('click', () => {
+    createSubmenu.style.display = 
+      createSubmenu.style.display === 'block' ? 'none' : 'block';
+  });
+
+   const navItems = document.querySelectorAll('.sidebar nav ul li');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(i => i.classList.remove('active')); // Remove from all
+      item.classList.add('active'); // Add to clicked
+    });
+  });
+
+  function navigateTo(section) {
+   
+    window.location.href = `${section}.html`;
+  }
+
+  const viewButtons = document.querySelectorAll('.recipe-card button');
+  const popup = document.getElementById('recipePopup');
+  const closeBtn = document.getElementById('closePopup');
+
+  // Elements inside popup to update dynamically
+  const popupTitle = document.getElementById('popupTitle');
+  const popupImage = document.getElementById('popupImage');
+  const popupTime = document.getElementById('popupTime');
+  const popupDescription = document.getElementById('popupDescription');
+
+  // For demo, simple descriptions (you can replace with your actual data)
+  const recipeDetails = {
+    "Chicken Biryani": "A flavorful layered rice dish cooked with marinated chicken and aromatic spices. Best served with raita.",
+    "Paneer Butter Masala": "Soft paneer cubes simmered in a rich buttery tomato gravy with Indian spices.",
+    "Masala Dosa": "A crispy fermented crepe filled with spicy mashed potatoes, served with chutney and sambar.",
+    "Gulab Jamun": "Soft milk-solid-based balls soaked in rose-flavored sugar syrup, a classic Indian dessert."
+  };
+
+  // Open popup with recipe details on button click
+  viewButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const card = button.closest('.recipe-card');
+      const title = card.querySelector('h3').textContent;
+      const imgSrc = card.querySelector('img').src;
+      const time = card.querySelector('p').textContent;
+      const desc = recipeDetails[title] || "Delicious recipe.";
+
+      // Update popup content
+      popupTitle.textContent = title;
+      popupImage.src = imgSrc;
+      popupImage.alt = title;
+      popupTime.textContent = time;
+      popupDescription.textContent = desc;
+
+      // Show popup
+      popup.style.display = 'block';
+    });
+  });
+
+  // Close popup on clicking cross button
+  closeBtn.addEventListener('click', () => {
+    popup.style.display = 'none';
+  });
+
+  function openPopup() {
+    document.getElementById("popupOverlay").classList.remove("hidden");
+    document.body.style.overflow = 'hidden'; // prevent background scroll
+  }
+
+  function closePopup() {
+    document.getElementById("popupOverlay").classList.add("hidden");
+    document.body.style.overflow = ''; // restore scroll
+  }
+  </script>
+
+ 
+</body>
+</html>

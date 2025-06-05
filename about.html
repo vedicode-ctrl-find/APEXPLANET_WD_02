@@ -1,0 +1,392 @@
+<!DOCTYPE html>   
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      display: grid;
+      grid-template-areas:
+        "header header"
+        "sidebar main"
+        "sidebar footer";
+      grid-template-columns: 240px 1fr;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      transition: grid-template-columns 0.3s ease;
+    }
+
+    body.sidebar-collapsed {
+      grid-template-columns: 72px 1fr;
+    }
+
+    header {
+      grid-area: header;
+      background: #fff;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      gap: 1rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #d94f4f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      width: 36px;
+      height: 36px;
+      user-select: none;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .logo span:first-child {
+      color: #000;
+    }
+
+    .logo span:last-child {
+      color: #f97316;
+    }
+
+    .search-wrapper {
+      flex-grow: 1;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      margin: 0 2rem;
+    }
+
+    .search-wrapper input {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px 0 0 6px;
+      width: 100%;
+    }
+
+    .search-btn {
+      background: #f97316;
+      color: white;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .material-icons {
+      font-size: 26px;
+      cursor: pointer;
+      color: #444;
+    }
+
+    aside.sidebar {
+      grid-area: sidebar;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 1rem;
+      border-right: 1px solid #eee;
+      width: 240px;
+      transition: width 0.3s;
+    }
+
+    body.sidebar-collapsed aside.sidebar {
+      width: 72px;
+      padding: 2rem 0.5rem;
+    }
+
+    .sidebar nav ul,
+    .sidebar-bottom ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav ul li,
+    .sidebar-bottom ul li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #444;
+      transition: background 0.2s;
+    }
+
+    .sidebar nav ul li:hover,
+    .sidebar-bottom ul li:hover {
+      background-color: #f0e8e3;
+    }
+
+    .sidebar nav ul li.active {
+      color: #f97316;
+    }
+
+    .sidebar nav ul li.active .material-icons {
+      color: #f97316;
+    }
+
+    .logout {
+      color: #dc2626;
+    }
+
+    .logout .material-icons {
+      color: #dc2626;
+    }
+
+    body.sidebar-collapsed .sidebar nav ul li span:not(.material-icons),
+    body.sidebar-collapsed .sidebar-bottom ul li span:not(.material-icons) {
+      display: none;
+    }
+
+    .submenu {
+  display: none;
+  padding-left: 2.5rem;
+  list-style: none;
+}
+
+.submenu li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.submenu li:hover {
+  background-color: #f0e8e3;
+}
+
+
+    main {
+  grid-area: main;
+  padding: 2rem;
+  overflow-y: auto;
+    background: #f3eaea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+    .about-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 0;
+      max-width: 1000px;
+      width: 100%;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .about-left {
+      background: url('https://www.shoplongino.ae/media/wysiwyg/spezie_1__2.jpg') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      color: white;
+    }
+
+    .about-left h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .about-left blockquote {
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #f5f5f5;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .about-right {
+      padding: 3rem;
+    }
+
+    .about-right h2 {
+      color: #e67e22;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+
+    .about-right p {
+      color: #444;
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+      font-size: 1.05rem;
+    }
+
+    .signature {
+      text-align: right;
+      font-weight: 600;
+      color: #d35400;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .about-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .about-left {
+        display: none; /* hide image on small screens */
+      }
+
+      .about-right {
+        padding: 2rem;
+      }
+    }
+
+    footer {
+      grid-area: footer;
+      background: #f4f4f4;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <button class="menu-btn" aria-label="Toggle sidebar menu">
+        <span class="material-icons">menu</span>
+      </button>
+      <div class="logo"><span>Swaad</span><span>Rachnay</span></div>
+    </div>
+
+    <div class="search-wrapper">
+      <input type="text" placeholder="Search recipe here..." />
+      <button class="search-btn" aria-label="Search">
+        <span class="material-icons">search</span>
+      </button>
+    </div>
+
+    <div class="header-icons">
+      <span class="material-icons" title="Notifications">notifications</span>
+      <span class="material-icons" title="Profile">account_circle</span>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <nav>
+        <ul>
+          <li  onclick="navigateTo('home')"><span class="material-icons">home</span><span>Home</span></li>
+          <li  onclick="navigateTo('categories')"><span class="material-icons">apps</span><span>Categories</span></li>
+          <li class="active" onclick="navigateTo('about')"><span class="material-icons">search</span><span>About</span></li>
+          <li  onclick="navigateTo('contact')"><span class="material-icons">mail</span><span>Contact</span></li>
+          <li  id="createMenu" class="has-submenu"><span class="material-icons">add</span><span>Create</span></li>
+<ul class="submenu" id="createSubmenu">
+  <li onclick="navigateTo('recipe')"><span class="material-icons">restaurant_menu</span><span>New Recipe</span></li>
+  <li onclick="navigateTo('todo')"><span class="material-icons">check_circle</span><span>To-Do List</span></li>
+</ul>
+
+        </ul>
+      </nav>
+    </div>
+    <div class="sidebar-bottom">
+      <ul>
+        <li onclick="navigateTo('categories')"><span class="material-icons">settings</span><span>Settings</span></li>
+        <li onclick="navigateTo('index')" class="logout"><span class="material-icons">logout</span><span>Log Out</span></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+     <div class="about-wrapper">
+    <div class="about-left">
+      <h1>Welcome</h1>
+      <blockquote>
+        “Cooking is not just about recipes, it’s about stories, memories, and joy shared around the table.”
+      </blockquote>
+    </div>
+    <div class="about-right">
+      <h2>About This Project</h2>
+      <p><strong>SwaadRachnay</strong> is more than a digital cookbook — it’s a handcrafted space where simplicity meets flavor. Whether you’re exploring Indian classics or crafting your own creations, this app is your personal kitchen diary.</p>
+      <p>Built during my web development journey, this project reflects my passion for both code and cuisine. You can add, edit, and explore recipes, organize your cooking through a smart to-do list, and even plan your meals — all saved right in your browser, no login needed.</p>
+      <p>This isn't just a website — it’s a growing archive of meals, memories, and the joy of home-cooked food.</p>
+      <p>Thank you for being part of this culinary adventure. Let’s keep cooking!</p>
+      <div class="signature">— Team</div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 SwaadRachnay | Made with ❤️ by You
+  </footer>
+
+  <script>
+    const menuBtn = document.querySelector('.menu-btn');
+    menuBtn.addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-collapsed');
+    });
+
+   const createMenu = document.getElementById('createMenu');
+  const createSubmenu = document.getElementById('createSubmenu');
+
+  createMenu.addEventListener('click', () => {
+    createSubmenu.style.display = 
+      createSubmenu.style.display === 'block' ? 'none' : 'block';
+  });
+
+   const navItems = document.querySelectorAll('.sidebar nav ul li');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(i => i.classList.remove('active')); // Remove from all
+      item.classList.add('active'); // Add to clicked
+    });
+  });
+
+  function navigateTo(section) {
+   
+    window.location.href = `${section}.html`;
+  }
+  </script>
+</body>
+</html>

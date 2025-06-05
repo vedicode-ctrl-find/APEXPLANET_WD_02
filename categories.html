@@ -1,0 +1,661 @@
+<!DOCTYPE html>   
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Categories</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-Kfw2T08PZ2CJktg7Ag0GIDyDA1aZEvEfP3UwVYxoj8Kh3vN6Gi1sXEO9ktmr0VgUyoIhFk4xxIb36iR4kB+faA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      display: grid;
+      grid-template-areas:
+        "header header"
+        "sidebar main"
+        "sidebar footer";
+      grid-template-columns: 240px 1fr;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      transition: grid-template-columns 0.3s ease;
+    }
+
+    body.sidebar-collapsed {
+      grid-template-columns: 72px 1fr;
+    }
+
+    header {
+      grid-area: header;
+      background: #fff;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      gap: 1rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #d94f4f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      width: 36px;
+      height: 36px;
+      user-select: none;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .logo span:first-child {
+      color: #000;
+    }
+
+    .logo span:last-child {
+      color: #f97316;
+    }
+
+    .search-wrapper {
+      flex-grow: 1;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      margin: 0 2rem;
+    }
+
+    .search-wrapper input {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px 0 0 6px;
+      width: 100%;
+    }
+
+    .search-btn {
+      background: #f97316;
+      color: white;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .material-icons {
+      font-size: 26px;
+      cursor: pointer;
+      color: #444;
+    }
+
+    aside.sidebar {
+      grid-area: sidebar;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 1rem;
+      border-right: 1px solid #eee;
+      width: 240px;
+      transition: width 0.3s;
+    }
+
+    body.sidebar-collapsed aside.sidebar {
+      width: 72px;
+      padding: 2rem 0.5rem;
+    }
+
+    .sidebar nav ul,
+    .sidebar-bottom ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav ul li,
+    .sidebar-bottom ul li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #444;
+      transition: background 0.2s;
+    }
+
+    .sidebar nav ul li:hover,
+    .sidebar-bottom ul li:hover {
+      background-color: #f0e8e3;
+    }
+
+    .sidebar nav ul li.active {
+      color: #f97316;
+    }
+
+    .sidebar nav ul li.active .material-icons {
+      color: #f97316;
+    }
+
+    .logout {
+      color: #dc2626;
+    }
+
+    .logout .material-icons {
+      color: #dc2626;
+    }
+
+    body.sidebar-collapsed .sidebar nav ul li span:not(.material-icons),
+    body.sidebar-collapsed .sidebar-bottom ul li span:not(.material-icons) {
+      display: none;
+    }
+
+    .submenu {
+  display: none;
+  padding-left: 2.5rem;
+  list-style: none;
+}
+
+.submenu li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.submenu li:hover {
+  background-color: #f0e8e3;
+}
+
+
+    main {
+      grid-area: main;
+      padding: 2rem;
+      background: #f3eaea;
+      overflow-y: auto;
+    }
+
+    .category-container {
+
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      max-width: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .category-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      background-color: #f4f4f4;
+      color: #333;
+      transition: background-color 0.2s;
+    }
+
+    .category-button:hover {
+      background-color: #e0e0e0;
+    }
+
+    .category-button.active {
+      background-color: #f86539;
+      color: #fff;
+    }
+
+    .category-button i {
+      font-size: 16px;
+    }
+
+.recipe-card {
+  width: 260px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: center;
+  padding-bottom: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.recipe-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.recipe-card h3 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.recipe-card p {
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.recipe-card button {
+  background-color: #f97316;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Modal styles */
+#recipe-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+#recipe-modal .modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  text-align: center;
+}
+
+
+#recipe-modal .modal-content img {
+  display: block;
+  margin: 0 auto 1rem;
+  width: 100%;              /* Full width of container */
+  max-height: 300px;        /* Allow a bit more height */
+  height: auto;             /* Maintain aspect ratio */
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+
+#recipe-modal .close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #ddd;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+
+    footer {
+      grid-area: footer;
+      background: #f4f4f4;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <button class="menu-btn" aria-label="Toggle sidebar menu">
+        <span class="material-icons">menu</span>
+      </button>
+      <div class="logo"><span>Swaad</span><span>Rachnay</span></div>
+    </div>
+
+    <div class="search-wrapper">
+      <input type="text" placeholder="Search recipe here..." />
+      <button class="search-btn" aria-label="Search">
+        <span class="material-icons">search</span>
+      </button>
+    </div>
+
+    <div class="header-icons">
+      <span class="material-icons" title="Notifications">notifications</span>
+      <span class="material-icons" title="Profile">account_circle</span>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <nav>
+        <ul>
+           <li  onclick="navigateTo('home')"><span class="material-icons">home</span><span>Home</span></li>
+          <li class="active" onclick="navigateTo('categories')"><span class="material-icons">apps</span><span>Categories</span></li>
+          <li onclick="navigateTo('about')"><span class="material-icons">search</span><span>About</span></li>
+          <li  onclick="navigateTo('contact')"><span class="material-icons">mail</span><span>Contact</span></li>
+          <li  id="createMenu" class="has-submenu"><span class="material-icons">add</span><span>Create</span></li>
+<ul class="submenu" id="createSubmenu">
+  <li onclick="navigateTo('recipe')"><span class="material-icons">restaurant_menu</span><span>New Recipe</span></li>
+  <li onclick="navigateTo('todo')"><span class="material-icons">check_circle</span><span>To-Do List</span></li>
+</ul>
+
+        </ul>
+      </nav>
+    </div>
+    <div class="sidebar-bottom">
+      <ul>
+        <li onclick="navigateTo('categories')"><span class="material-icons">settings</span><span>Settings</span></li>
+        <li onclick="navigateTo('index')" class="logout"><span class="material-icons">logout</span><span>Log Out</span></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+  <div class="category-container">
+  <button class="category-button active" data-category="all"><span class="material-icons">restaurant</span> All Types</button>
+  <button class="category-button" data-category="snacks"><span class="material-icons">fastfood</span> Snacks & Chaats</button>
+  <button class="category-button" data-category="main"><span class="material-icons">lunch_dining</span> Main Dishes</button>
+  <button class="category-button" data-category="rice"><span class="material-icons">ramen_dining</span> Rice & Biryanis</button>
+  <button class="category-button" data-category="vegetarian"><span class="material-icons">spa</span> Vegetarian</button>
+  <button class="category-button" data-category="sweets"><span class="material-icons">icecream</span> Indian Sweets</button>
+  <button class="category-button" data-category="healthy"><span class="material-icons">favorite</span> Healthy Options</button>
+</div>
+<br><br><br>
+<div id="recipe-list" class="category-container"></div>
+
+ <div id="recipe-modal">
+  <div class="modal-content">
+    <button class="close-btn">&times;</button>
+     <img id="modal-image" src="" alt="Recipe Image" style="max-width: 100%; height: auto; margin: 10px 0;" />
+    <h2 id="modal-title">Title</h2>
+    <p id="modal-time">⏱ Time</p>
+    <br>
+    <p id="modal-desc">Recipe description goes here.</p>
+  </div>
+</div>
+
+
+</main>
+
+
+  <footer>
+    &copy; 2025 SwaadRachnay | Made with ❤️ by You
+  </footer>
+
+  <script>
+    const menuBtn = document.querySelector('.menu-btn');
+    menuBtn.addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-collapsed');
+    });
+
+   const createMenu = document.getElementById('createMenu');
+  const createSubmenu = document.getElementById('createSubmenu');
+
+  createMenu.addEventListener('click', () => {
+    createSubmenu.style.display = 
+      createSubmenu.style.display === 'block' ? 'none' : 'block';
+  });
+
+   const navItems = document.querySelectorAll('.sidebar nav ul li');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(i => i.classList.remove('active')); // Remove from all
+      item.classList.add('active'); // Add to clicked
+    });
+  });
+
+  function navigateTo(section) {
+   
+    window.location.href = `${section}.html`;
+  }
+
+  const modal = document.getElementById("recipe-modal");
+const closeBtn = modal.querySelector(".close-btn");
+
+function showRecipeModal(recipe) {
+  document.getElementById("modal-title").innerText = recipe.title;
+  document.getElementById("modal-time").innerText = `⏱  ${recipe.time}`;
+  const modalImage = document.getElementById("modal-image");
+  if (recipe.image) {
+    modalImage.src = recipe.image;
+    modalImage.alt = recipe.title;
+    modalImage.style.display = "block";
+  } else {
+    modalImage.style.display = "none";  // hide image if no image provided
+  }
+  document.getElementById("modal-desc").innerText = recipe.description || "Delicious and easy to make!";
+
+  modal.style.display = "flex";
+}
+
+closeBtn.addEventListener("click", () => {
+  modal.style.display = "none";
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+});
+
+const recipes = [
+  // Snacks & Chaats
+  {
+    title: "Pani Puri",
+    category: "snacks",
+    time: "30 mins",
+    image: "https://i.pinimg.com/736x/48/76/67/487667902ce6f1875adaa1ca35b786ae.jpg",
+    description: "Crispy puris filled with tangy and spicy flavored water and potatoes."
+  },
+  {
+    title: "Samosa",
+    category: "snacks",
+    time: "45 mins",
+    image: "https://ganeshaeksanskriti.com/cdn/shop/files/Samosa.jpg?v=1705398263",
+    description: "Golden fried pastry stuffed with spicy potato filling."
+  },
+  {
+    title: "Dahi Puri",
+    category: "snacks",
+    time: "20 mins",
+    image: "https://www.spiceupthecurry.com/wp-content/uploads/2015/06/dahi-batata-puri-1.jpg",
+    description: "Crispy puris topped with yogurt, chutneys, and sev."
+  },
+
+  // Main Dishes
+  {
+    title: "Butter Chicken",
+    category: "main",
+    time: "50 mins",
+    image: "https://www.cookwithkushi.com/wp-content/uploads/2016/07/best_butter_chicken_murgh_makhani_recipe.jpg",
+    description: "Creamy tomato-based curry with grilled chicken pieces."
+  },
+  {
+    title: "Palak Paneer",
+    category: "main",
+    time: "40 mins",
+    image: "https://shwetainthekitchen.com/wp-content/uploads/2023/02/Palak-paneer.jpg",
+    description: "Paneer cubes in a rich spinach gravy."
+  },
+  {
+    title: "Rogan Josh",
+    category: "main",
+    time: "60 mins",
+    image: "https://www.indiansupperclub.com/wp-content/uploads/2022/08/2022-08-04-13.10.42.jpg",
+    description: "Spiced lamb curry originating from Kashmir."
+  },
+
+  // Rice & Biryanis
+  {
+    title: "Chicken Biryani",
+    category: "rice",
+    time: "60 mins",
+    image: "https://assets.limetray.com/assets/user_images/menus/compressed/1606130153_HyderabadiChickenBiryani.JPG",
+    description: "Fragrant basmati rice layered with spiced chicken and cooked to perfection."
+  },
+  {
+    title: "Vegetable Pulao",
+    category: "rice",
+    time: "30 mins",
+    image: "https://tildaricelive.s3.eu-central-1.amazonaws.com/wp-content/uploads/2021/10/25115815/image00002-1260x1260.jpeg",
+    description: "Aromatic rice cooked with mixed vegetables and spices."
+  },
+  {
+    title: "Hyderabadi Biryani",
+    category: "rice",
+    time: "70 mins",
+    image: "https://lh3.googleusercontent.com/cjXCo-QIdJ0OOmLaAz2NG7hcgzyMt4NdWR_41SkMqUgZ3_L4nRQ8PuGOkKvSVHxcbwMV2d-wzGMVt56mxAKjtuvCh8qe=w300-rw",
+    description: "Rich and spicy biryani made in traditional dum style."
+  },
+
+  // Vegetarian
+  {
+    title: "Paneer Butter Masala",
+    category: "vegetarian",
+    time: "40 mins",
+    image: "https://vegecravings.com/wp-content/uploads/2017/04/paneer-butter-masala-recipe-step-by-step-instructions-500x500.jpg",
+    description: "Creamy tomato-based curry with soft paneer cubes."
+  },
+  {
+    title: "Chole",
+    category: "vegetarian",
+    time: "35 mins",
+    image: "https://rustictadka.com/wp-content/uploads/2024/04/chole-masala-2.jpg",
+    description: "Spiced chickpea curry served with bhature or rice."
+  },
+  {
+    title: "Aloo Gobi",
+    category: "vegetarian",
+    time: "30 mins",
+    image: "https://shwetainthekitchen.com/wp-content/uploads/2024/01/aloo-gobi.jpg",
+    description: "Dry curry made with potatoes, cauliflower and Indian spices."
+  },
+
+  // Indian Sweets
+  {
+    title: "Gulab Jamun",
+    category: "sweets",
+    time: "45 mins",
+    image: "https://www.foodie-trail.com/wp-content/uploads/2020/04/PHOTO-2022-02-12-20-04-41_1.jpg",
+    description: "Milk solid dumplings soaked in rose-flavored sugar syrup."
+  },
+  {
+    title: "Rasgulla",
+    category: "sweets",
+    time: "60 mins",
+    image: "https://en-media.thebetterindia.com/uploads/2017/01/rasgulla_625x350_61440575963.jpg",
+    description: "Soft and spongy balls made from chhena, soaked in sugar syrup."
+  },
+  {
+    title: "Kaju Katli",
+    category: "sweets",
+    time: "50 mins",
+    image: "https://www.gracebakery.in/images/kaju-katli.webp",
+    description: "Diamond-shaped sweet made from cashew paste and sugar."
+  },
+
+  // Healthy Options
+  {
+    title: "Moong Dal Salad",
+    category: "healthy",
+    time: "20 mins",
+    image: "https://www.indianveggiedelight.com/wp-content/uploads/2021/05/Sprouted-moong-salad-featured.jpg",
+    description: "Protein-rich salad with sprouted moong and veggies."
+  },
+  {
+    title: "Quinoa Khichdi",
+    category: "healthy",
+    time: "30 mins",
+    image: "https://pipingpotcurry.com/wp-content/uploads/2021/09/Indian-Quinoa-Khichdi-Recipe-Piping-Pot-Curry.jpg",
+    description: "Wholesome khichdi made with quinoa and lentils."
+  },
+  {
+    title: "Steamed Idlis",
+    category: "healthy",
+    time: "25 mins",
+    image: "https://i.pinimg.com/736x/84/4d/a3/844da3d7671802cb8db6ac7de4360919.jpg",
+    description: "Soft steamed rice cakes, low in fat and easy to digest."
+  }
+];
+
+
+const list = document.getElementById("recipe-list");
+
+// On load display all recipes
+displayRecipes("all");
+
+// Handle category button clicks
+document.querySelectorAll('.category-button').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.category-button').forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+    displayRecipes(button.dataset.category);
+  });
+});
+
+function displayRecipes(category = "all") {
+  const list = document.getElementById("recipe-list");
+  list.innerHTML = "";
+
+  const filtered = category === "all"
+    ? recipes
+    : recipes.filter(r => r.category === category);
+
+  filtered.forEach(recipe => {
+    const card = document.createElement("div");
+    card.className = "recipe-card";
+    card.innerHTML = `
+      <img src="${recipe.image}" alt="${recipe.title}">
+      <h3>${recipe.title}</h3>
+      <p>⏱  ${recipe.time}</p>
+      <button>View Recipe</button>
+    `;
+    card.querySelector("button").addEventListener("click", () => showRecipeModal(recipe));
+    list.appendChild(card);
+  });
+}
+
+  </script>
+</body>
+</html>

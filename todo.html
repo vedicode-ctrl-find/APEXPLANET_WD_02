@@ -1,0 +1,473 @@
+<!DOCTYPE html>   
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Todo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      display: grid;
+      grid-template-areas:
+        "header header"
+        "sidebar main"
+        "sidebar footer";
+      grid-template-columns: 240px 1fr;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      transition: grid-template-columns 0.3s ease;
+    }
+
+    body.sidebar-collapsed {
+      grid-template-columns: 72px 1fr;
+    }
+
+    header {
+      grid-area: header;
+      background: #fff;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      gap: 1rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #d94f4f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      width: 36px;
+      height: 36px;
+      user-select: none;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .logo span:first-child {
+      color: #000;
+    }
+
+    .logo span:last-child {
+      color: #f97316;
+    }
+
+    .search-wrapper {
+      flex-grow: 1;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      margin: 0 2rem;
+    }
+
+    .search-wrapper input {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px 0 0 6px;
+      width: 100%;
+    }
+
+    .search-btn {
+      background: #f97316;
+      color: white;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .material-icons {
+      font-size: 26px;
+      cursor: pointer;
+      color: #444;
+    }
+
+    aside.sidebar {
+      grid-area: sidebar;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 1rem;
+      border-right: 1px solid #eee;
+      width: 240px;
+      transition: width 0.3s;
+    }
+
+    body.sidebar-collapsed aside.sidebar {
+      width: 72px;
+      padding: 2rem 0.5rem;
+    }
+
+    .sidebar nav ul,
+    .sidebar-bottom ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav ul li,
+    .sidebar-bottom ul li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #444;
+      transition: background 0.2s;
+    }
+
+    .sidebar nav ul li:hover,
+    .sidebar-bottom ul li:hover {
+      background-color: #f0e8e3;
+    }
+
+    .sidebar nav ul li.active {
+      color: #f97316;
+    }
+
+    .sidebar nav ul li.active .material-icons {
+      color: #f97316;
+    }
+
+    .logout {
+      color: #dc2626;
+    }
+
+    .logout .material-icons {
+      color: #dc2626;
+    }
+
+    body.sidebar-collapsed .sidebar nav ul li span:not(.material-icons),
+    body.sidebar-collapsed .sidebar-bottom ul li span:not(.material-icons) {
+      display: none;
+    }
+
+    .submenu {
+  display: none;
+  padding-left: 2.5rem;
+  list-style: none;
+}
+
+.submenu li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.submenu li:hover {
+  background-color: #f0e8e3;
+}
+
+
+  main {
+  grid-area: main;
+  padding: 2rem;
+  background: url('https://media.assettype.com/freepressjournal/2024-03/f0553213-fcd8-414e-b194-01d1e6824ddf/Swarna___2024_03_03T112444_870.jpg?width=1200') center/cover no-repeat;
+  overflow-y: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+.container {
+  max-width: 650px;
+  width: 100%;
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  padding: 2rem;
+}
+
+
+    h2 {
+      text-align: center;
+      color: #d35400;
+      margin-bottom: 1rem;
+    }
+
+    .quote {
+      text-align: center;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: #888;
+      margin-bottom: 2rem;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .input-group input, .input-group select, .input-group button {
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .input-group input {
+      flex: 2;
+    }
+
+    .input-group select {
+      flex: 1;
+    }
+
+    .input-group button {
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #stepList {
+      list-style: none;
+      padding: 0;
+    }
+
+    #stepList li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff3e6;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 0.8rem;
+      transition: 0.3s ease;
+      border-left: 5px solid #e67e22;
+    }
+
+    li.completed {
+      text-decoration: line-through;
+      opacity: 0.6;
+      border-left-color: #27ae60;
+    }
+
+    .step-text {
+      flex: 1;
+    }
+
+    .step-category {
+      font-size: 0.75rem;
+      color: #999;
+      margin-top: 0.3rem;
+    }
+
+    .actions button {
+      border: none;
+      background: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: #e74c3c;
+      margin-left: 0.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .input-group { flex-direction: column; }
+      .input-group input, .input-group select, .input-group button {
+        width: 100%;
+      }
+    }
+
+    footer {
+      grid-area: footer;
+      background: #f4f4f4;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <button class="menu-btn" aria-label="Toggle sidebar menu">
+        <span class="material-icons">menu</span>
+      </button>
+      <div class="logo"><span>Swaad</span><span>Rachnay</span></div>
+    </div>
+
+    <div class="search-wrapper">
+      <input type="text" placeholder="Search recipe here..." />
+      <button class="search-btn" aria-label="Search">
+        <span class="material-icons">search</span>
+      </button>
+    </div>
+
+    <div class="header-icons">
+      <span class="material-icons" title="Notifications">notifications</span>
+      <span class="material-icons" title="Profile">account_circle</span>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <nav>
+        <ul>
+         <li  onclick="navigateTo('home')"><span class="material-icons">home</span><span>Home</span></li>
+          <li onclick="navigateTo('categories')"><span class="material-icons">apps</span><span>Categories</span></li>
+          <li onclick="navigateTo('about')"><span class="material-icons">search</span><span>About</span></li>
+          <li  onclick="navigateTo('contact')"><span class="material-icons">mail</span><span>Contact</span></li>
+          <li  id="createMenu" class="has-submenu "><span class="material-icons">add</span><span>Create</span></li>
+<ul class="submenu" id="createSubmenu">
+  <li  onclick="navigateTo('recipe')"><span class="material-icons">restaurant_menu</span><span>New Recipe</span></li>
+  <li class="active" onclick="navigateTo('todo')"><span class="material-icons">check_circle</span><span>To-Do List</span></li>
+</ul>
+        </ul>
+      </nav>
+    </div>
+    <div class="sidebar-bottom">
+      <ul>
+        <li onclick="navigateTo('categories')"><span class="material-icons">settings</span><span>Settings</span></li>
+        <li onclick="navigateTo('index')" class="logout"><span class="material-icons">logout</span><span>Log Out</span></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <div class="container">
+    <h2>🍳 My Cooking Checklist</h2>
+    <p class="quote">"Good food is all the sweeter when shared with good friends."</p>
+
+    <div class="input-group">
+      <input type="text" id="stepInput" placeholder="e.g. Marinate chicken, Boil rice..." />
+      <select id="stepType">
+        <option value="grocery">🛒 Grocery</option>
+        <option value="prep">🔪 Prep</option>
+        <option value="cook">🍳 Cook</option>
+        <option value="serve">🍽️ Serve</option>
+      </select>
+      <button onclick="addStep()">Add</button>
+    </div>
+
+    <ul id="stepList"></ul>
+  </div>
+  </main>
+
+  <footer>
+    &copy; 2025 SwaadRachnay | Made with ❤️ by You
+  </footer>
+
+  <script>
+    const menuBtn = document.querySelector('.menu-btn');
+    menuBtn.addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-collapsed');
+    });
+
+   const createMenu = document.getElementById('createMenu');
+  const createSubmenu = document.getElementById('createSubmenu');
+
+  createMenu.addEventListener('click', () => {
+    createSubmenu.style.display = 
+      createSubmenu.style.display === 'block' ? 'none' : 'block';
+  });
+
+   const navItems = document.querySelectorAll('.sidebar nav ul li');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(i => i.classList.remove('active')); // Remove from all
+      item.classList.add('active'); // Add to clicked
+    });
+  });
+
+  function navigateTo(section) {
+   
+    window.location.href = `${section}.html`;
+  }
+
+  const stepList = JSON.parse(localStorage.getItem("cookSteps")) || [];
+
+    function renderSteps() {
+      const ul = document.getElementById("stepList");
+      ul.innerHTML = "";
+
+      stepList.forEach((step, index) => {
+        const li = document.createElement("li");
+        li.className = step.completed ? "completed" : "";
+
+        li.innerHTML = `
+          <div class="step-text">
+            <div><strong>${step.text}</strong></div>
+            <div class="step-category">${step.category.toUpperCase()}</div>
+          </div>
+          <div class="actions">
+            <button onclick="toggleDone(${index})">✔</button>
+            <button onclick="deleteStep(${index})">🗑</button>
+          </div>
+        `;
+
+        ul.appendChild(li);
+      });
+
+      localStorage.setItem("cookSteps", JSON.stringify(stepList));
+    }
+
+    function addStep() {
+      const text = document.getElementById("stepInput").value.trim();
+      const category = document.getElementById("stepType").value;
+
+      if (!text) return;
+
+      stepList.push({ text, category, completed: false });
+      document.getElementById("stepInput").value = "";
+      renderSteps();
+    }
+
+    function toggleDone(index) {
+      stepList[index].completed = !stepList[index].completed;
+      renderSteps();
+    }
+
+    function deleteStep(index) {
+      stepList.splice(index, 1);
+      renderSteps();
+    }
+
+    renderSteps();
+  </script>
+</body>
+</html>

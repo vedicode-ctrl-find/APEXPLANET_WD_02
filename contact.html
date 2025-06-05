@@ -1,0 +1,432 @@
+<!DOCTYPE html>   
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cookbook Recipe Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      display: grid;
+      grid-template-areas:
+        "header header"
+        "sidebar main"
+        "sidebar footer";
+      grid-template-columns: 240px 1fr;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      transition: grid-template-columns 0.3s ease;
+    }
+
+    body.sidebar-collapsed {
+      grid-template-columns: 72px 1fr;
+    }
+
+    header {
+      grid-area: header;
+      background: #fff;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      gap: 1rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #d94f4f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      width: 36px;
+      height: 36px;
+      user-select: none;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .logo span:first-child {
+      color: #000;
+    }
+
+    .logo span:last-child {
+      color: #f97316;
+    }
+
+    .search-wrapper {
+      flex-grow: 1;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      margin: 0 2rem;
+    }
+
+    .search-wrapper input {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px 0 0 6px;
+      width: 100%;
+    }
+
+    .search-btn {
+      background: #f97316;
+      color: white;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .material-icons {
+      font-size: 26px;
+      cursor: pointer;
+      color: #444;
+    }
+
+    aside.sidebar {
+      grid-area: sidebar;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 1rem;
+      border-right: 1px solid #eee;
+      width: 240px;
+      transition: width 0.3s;
+    }
+
+    body.sidebar-collapsed aside.sidebar {
+      width: 72px;
+      padding: 2rem 0.5rem;
+    }
+
+    .sidebar nav ul,
+    .sidebar-bottom ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav ul li,
+    .sidebar-bottom ul li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #444;
+      transition: background 0.2s;
+    }
+
+    .sidebar nav ul li:hover,
+    .sidebar-bottom ul li:hover {
+      background-color: #f0e8e3;
+    }
+
+    .sidebar nav ul li.active {
+      color: #f97316;
+    }
+
+    .sidebar nav ul li.active .material-icons {
+      color: #f97316;
+    }
+
+    .logout {
+      color: #dc2626;
+    }
+
+    .logout .material-icons {
+      color: #dc2626;
+    }
+
+    body.sidebar-collapsed .sidebar nav ul li span:not(.material-icons),
+    body.sidebar-collapsed .sidebar-bottom ul li span:not(.material-icons) {
+      display: none;
+    }
+
+    .submenu {
+  display: none;
+  padding-left: 2.5rem;
+  list-style: none;
+}
+
+.submenu li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.submenu li:hover {
+  background-color: #f0e8e3;
+}
+
+
+   main {
+  grid-area: main;
+  padding: 2rem;
+  overflow-y: auto;
+   background: #f3eaea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+    .contact-card {
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #374151;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #3b82f6;
+      outline: none;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+      margin-top: 4px;
+    }
+
+    .button1 {
+      background-color: #f97316;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    .button1:hover {
+      background-color: #f57e28;
+    }
+
+    @media (max-width: 600px) {
+      .contact-card {
+        margin: 0 20px;
+      }
+    }
+
+    footer {
+      grid-area: footer;
+      background: #f4f4f4;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <button class="menu-btn" aria-label="Toggle sidebar menu">
+        <span class="material-icons">menu</span>
+      </button>
+      <div class="logo"><span>Swaad</span><span>Rachnay</span></div>
+    </div>
+
+    <div class="search-wrapper">
+      <input type="text" placeholder="Search recipe here..." />
+      <button class="search-btn" aria-label="Search">
+        <span class="material-icons">search</span>
+      </button>
+    </div>
+
+    <div class="header-icons">
+      <span class="material-icons" title="Notifications">notifications</span>
+      <span class="material-icons" title="Profile">account_circle</span>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <nav>
+        <ul>
+          <li  onclick="navigateTo('index')"><span class="material-icons">home</span><span>Home</span></li>
+          <li  onclick="navigateTo('categories')"><span class="material-icons">apps</span><span>Categories</span></li>
+          <li onclick="navigateTo('about')"><span class="material-icons">search</span><span>About</span></li>
+          <li class="active" onclick="navigateTo('contact')"><span class="material-icons">mail</span><span>Contact</span></li>
+          <li  id="createMenu" class="has-submenu"><span class="material-icons">add</span><span>Create</span></li>
+<ul class="submenu" id="createSubmenu">
+  <li onclick="navigateTo('recipe')"><span class="material-icons">restaurant_menu</span><span>New Recipe</span></li>
+  <li onclick="navigateTo('todo')"><span class="material-icons">check_circle</span><span>To-Do List</span></li>
+</ul>
+
+        </ul>
+      </nav>
+    </div>
+    <div class="sidebar-bottom">
+      <ul>
+        <li onclick="navigateTo('categories')"><span class="material-icons">settings</span><span>Settings</span></li>
+        <li onclick="navigateTo('categories')" class="logout"><span class="material-icons">logout</span><span>Log Out</span></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+     <div class="contact-card">
+    <h2 style="text-align: center;">Contact Us</h2>
+    <form id="contactForm" novalidate>
+      <div class="form-group">
+        <label for="name">Name *</label>
+        <input type="text" id="name" name="name">
+        <div class="error" id="nameError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email">
+        <div class="error" id="emailError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message *</label>
+        <textarea id="message" name="message" rows="4"></textarea>
+        <div class="error" id="messageError"></div>
+      </div>
+
+      <button class="button1" type="submit">Send Message</button>
+    </form>
+  </div>
+  </main>
+
+  <footer>
+    &copy; 2025 SwaadRachnay | Made with ❤️ by You
+  </footer>
+
+  <script>
+    const menuBtn = document.querySelector('.menu-btn');
+    menuBtn.addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-collapsed');
+    });
+
+   const createMenu = document.getElementById('createMenu');
+  const createSubmenu = document.getElementById('createSubmenu');
+
+  createMenu.addEventListener('click', () => {
+    createSubmenu.style.display = 
+      createSubmenu.style.display === 'block' ? 'none' : 'block';
+  });
+
+   const navItems = document.querySelectorAll('.sidebar nav ul li');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(i => i.classList.remove('active')); // Remove from all
+      item.classList.add('active'); // Add to clicked
+    });
+  });
+
+  function navigateTo(section) {
+   
+    window.location.href = `${section}.html`;
+  }
+
+  const form = document.getElementById('contactForm');
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const message = document.getElementById('message');
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const messageError = document.getElementById('messageError');
+
+    function validateEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Clear previous errors
+      nameError.textContent = '';
+      emailError.textContent = '';
+      messageError.textContent = '';
+
+      let valid = true;
+
+      if (name.value.trim() === '') {
+        nameError.textContent = 'Name is required.';
+        valid = false;
+      }
+
+      if (email.value.trim() === '') {
+        emailError.textContent = 'Email is required.';
+        valid = false;
+      } else if (!validateEmail(email.value)) {
+        emailError.textContent = 'Enter a valid email address.';
+        valid = false;
+      }
+
+      if (message.value.trim() === '') {
+        messageError.textContent = 'Message cannot be empty.';
+        valid = false;
+      }
+
+      if (valid) {
+        alert('Message sent successfully!');
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
